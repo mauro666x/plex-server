@@ -1,0 +1,72 @@
+# ============================================
+# Archivos sensibles / configuración local
+# ============================================
+.env
+.env.*
+!.env.example
+
+# ============================================
+# Datos de Plex, medios y descargas
+# ============================================
+data/
+# Si quisieras mantener solo la estructura, podrías
+# usar .gitkeep dentro de cada carpeta y anular ignores,
+# pero lo más sano es ignorar todo data/ en este proyecto.
+
+# ============================================
+# Config y estado de Transmission
+# ============================================
+transmission/
+# Si quisieras versionar una plantilla de settings.json,
+# podrías tener transmission/settings.example.json y
+# añadir explícitamente:
+# !transmission/settings.example.json
+
+# ============================================
+# Logs, bases de datos y ficheros temporales
+# ============================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# ============================================
+# Cosas de FlexGet que no quieras versionar
+# (por defecto solo tendrás config.yml y scripts)
+# ============================================
+flexget/flexget.log
+flexget/__pycache__/
+flexget/*.db
+
+# ============================================
+# Archivos de sistema / editor
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Carpetas de papelera
+.Trashes
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# ============================================
+# Docker
+# ============================================
+# Si usas archivos de override locales:
+docker-compose.override.yml
+

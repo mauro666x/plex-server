@@ -1,0 +1,21 @@
+# Configuración mínima de Flexget
+
+web_server:
+  bind: 0.0.0.0
+  port: 5050
+
+# A partir de aquí puedes definir tareas.
+# Dejo un ejemplo comentado para que no haga nada hasta que lo configures.
+
+#tasks:
+#  example-rss:
+#    rss: https://tu-feed-de-torrents.com/rss
+#    series:
+#      - "Nombre de la serie"
+#    accept_all: yes
+#    transmission:
+#      host: transmission
+#      port: 9091
+#      username: TR_USERNAME_AQUI
+#      password: TR_PASSWORD_AQUI
+#      path: /downloads

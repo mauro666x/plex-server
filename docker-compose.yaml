@@ -1,0 +1,82 @@
+version: "3.7"
+
+services:
+
+  samba:
+    image: dperson/samba
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: >
+      -u "${SAMBA_USER};${SAMBA_PASS}"
+      -s "media;/media;yes;no"
+      -s "downloads;/downloads;yes;no"
+    environment:
+      - TZ=${TZ}
+    # Puertos NO estándar en el host para no chocar con el SMB nativo de macOS
+    ports:
+      - "1139:139"
+      - "1445:445"
+    volumes:
+      - ${MEDIA}:/media
+      - ${STORAGE}/torrents:/downloads
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - VERSION=docker
+      - PLEX_CLAIM=${PLEX_CLAIM}
+    # En macOS usamos bridge + ports (host mode solo tiene sentido en Linux)
+    ports:
+      - "32400:32400/tcp"
+    volumes:
+      # /config = librería de Plex (prefs, metadata, etc.)
+      - ${STORAGE}/Plex Media Server:/config
+      # /data = tus medios (movies/tv)
+      - ${MEDIA}:/data
+      # /transcode = carpeta temporal de transcode
+      - ${STORAGE}/tmp:/transcode
+
+  transmission:
+    image: jaymoulin/transmission:3.00-1.6.1
+    container_name: transmission
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - USERNAME=${TR_USERNAME}
+      - PASSWORD=${TR_PASSWORD}
+    command: transmission-daemon -f -g /config
+    ports:
+      - "9091:9091"
+      - "51413:51413"
+      - "51413:51413/udp"
+    volumes:
+      - ./transmission:/config
+      - ${STORAGE}/torrents:/downloads
+
+  flexget:
+    image: wiserain/flexget:3.5
+    container_name: flexget
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TORRENT_PLUGIN=transmission
+      - FG_WEBUI_PASSWD=${FLEXGET_WEBUI_PASS}
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./flexget:/config
+      - ./flexget/custom-cont-init.d:/custom-cont-init.d
+      - ${STORAGE}/torrents:/downloads
+      - ${MEDIA}:/storage
+
+networks:
+  default:
+    driver: bridge
