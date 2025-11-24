@@ -16,11 +16,16 @@ data/
 # ============================================
 # Config y estado de Transmission
 # ============================================
-transmission/
+#transmission/
 # Si quisieras versionar una plantilla de settings.json,
 # podrías tener transmission/settings.example.json y
 # añadir explícitamente:
 # !transmission/settings.example.json
+tramission/torrents/*
+transmission/blocklist/*
+transmission/resume/*
+tramission/dht.dat
+
 
 # ============================================
 # Logs, bases de datos y ficheros temporales
@@ -39,7 +44,6 @@ transmission/
 
 # ============================================
 # Cosas de FlexGet que no quieras versionar
-# (por defecto solo tendrás config.yml y scripts)
 # ============================================
 flexget/flexget.log
 flexget/__pycache__/
@@ -56,7 +60,7 @@ flexget/*.db
 # Thumbnails
 ._*
 
-# Carpetas de papelera
+# Papelera
 .Trashes
 
 # VSCode / IDEs
@@ -67,6 +71,4 @@ flexget/*.db
 # ============================================
 # Docker
 # ============================================
-# Si usas archivos de override locales:
 docker-compose.override.yml
-

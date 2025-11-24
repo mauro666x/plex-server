@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
 
   samba:
@@ -31,15 +29,19 @@ services:
       - TZ=${TZ}
       - VERSION=docker
       - PLEX_CLAIM=${PLEX_CLAIM}
-    # En macOS usamos bridge + ports (host mode solo tiene sentido en Linux)
     ports:
       - "32400:32400/tcp"
+      - "3005:3005/tcp"
+      - "8324:8324/tcp"
+      - "32469:32469/tcp"
+      - "1900:1900/udp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:32414/udp"
     volumes:
-      # /config = librería de Plex (prefs, metadata, etc.)
       - ${STORAGE}/Plex Media Server:/config
-      # /data = tus medios (movies/tv)
       - ${MEDIA}:/data
-      # /transcode = carpeta temporal de transcode
       - ${STORAGE}/tmp:/transcode
 
   transmission:
@@ -58,6 +60,8 @@ services:
     volumes:
       - ./transmission:/config
       - ${STORAGE}/torrents:/downloads
+      - ${MEDIA}/movies:/movies          # destino final de pelis para Plex
+      - ./scripts/transmission:/scripts  # scripts de hooks
 
   flexget:
     image: wiserain/flexget:3.5
@@ -69,13 +73,15 @@ services:
       - PGID=${PGID}
       - TORRENT_PLUGIN=transmission
       - FG_WEBUI_PASSWD=${FLEXGET_WEBUI_PASS}
+      - OS_USER=${OS_USER}
+      - OS_PASS=${OS_PASS}
     ports:
       - "5050:5050"
     volumes:
       - ./flexget:/config
       - ./flexget/custom-cont-init.d:/custom-cont-init.d
       - ${STORAGE}/torrents:/downloads
-      - ${MEDIA}:/storage
+      - ${MEDIA}:/data
 
 networks:
   default:

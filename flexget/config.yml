@@ -3,12 +3,30 @@ web_server:
   port: 5050
   web_ui: yes
 
-tasks:
-  example-task:
-    rss: http://example.com/feed.xml
-    download: /data
-    series:
-      - some series 1
-      - some series 2
+schedules:
+  - tasks: [get-subtitles]
+    interval:
+      minutes: 30
 
-schedules: no
+tasks:
+  get-subtitles:
+    filesystem:
+      path:
+        - /data/movies
+      regexp: '.*\.(mp4|mkv|avi)$'
+      recursive: yes
+      retrieve: files
+    accept_all: yes
+    seen: local
+    subliminal:
+      languages:
+        - spa
+        - eng
+      providers:
+        - opensubtitles
+      single: no
+      hearing_impaired: no
+      authentication:
+        opensubtitles:
+          username: "{? OS_USER ?}"
+          password: "{? OS_PASS ?}"
