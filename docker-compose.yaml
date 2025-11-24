@@ -45,14 +45,15 @@ services:
       - ${STORAGE}/tmp:/transcode
 
   transmission:
-    image: jaymoulin/transmission:3.00-1.6.1
+    image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
     restart: unless-stopped
     environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
-      - USERNAME=${TR_USERNAME}
-      - PASSWORD=${TR_PASSWORD}
-    command: transmission-daemon -f -g /config
+      - USER=${TR_USERNAME}
+      - PASS=${TR_PASSWORD}
     ports:
       - "9091:9091"
       - "51413:51413"
@@ -64,14 +65,13 @@ services:
       - ./scripts/transmission:/scripts  # scripts de hooks
 
   flexget:
-    image: wiserain/flexget:3.5
+    image: lscr.io/linuxserver/flexget:latest
     container_name: flexget
     restart: unless-stopped
     environment:
-      - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
-      - TORRENT_PLUGIN=transmission
+      - TZ=${TZ}
       - FG_WEBUI_PASSWD=${FLEXGET_WEBUI_PASS}
       - OS_USER=${OS_USER}
       - OS_PASS=${OS_PASS}
